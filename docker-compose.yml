@@ -1,0 +1,32 @@
+version: '2'
+
+services:
+  mysql_dev:
+    image: mysql:5.6
+    network_mode: bridge
+    volumes:
+      - "$HOME/BD/gertask:/var/lib/mysql"
+    ports:
+      - 3304:3306
+    environment:
+      - MYSQL_USER=docker
+      - MYSQL_PASSWORD=mysql
+      - MYSQL_ROOT_PASSWORD=mysql
+
+  development:
+    image: gertask_dev
+    build: ./docker
+    depends_on: 
+      - mysql_dev
+    working_dir: /var/www/gertask
+    network_mode: bridge
+    ports:
+      - 80:80
+    hostname: "gertask-dev"
+    volumes:
+      - $PWD/docker/bash.bashrc:/deploy/.bashrc
+      - $HOME/.ssh:/deploy/.ssh
+      - ./:/var/www/gertask
+      - $HOME/.gitconfig:/deploy/.gitconfig
+    links:
+     - "mysql_dev:bd"
