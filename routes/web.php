@@ -14,3 +14,7 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::resource('tarefa','TarefaController');
+
+Route::get('exercicio1/{numero}', 'Exercicio1Controller@index');
